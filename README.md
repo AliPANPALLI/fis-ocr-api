@@ -238,3 +238,29 @@ Docker destekleyen bir platformda ise:
 docker build -t fis-ocr-api .
 docker run -p 8000:8000 fis-ocr-api
 ```
+
+## Windows EXE Olusturma
+
+Kodlari normal kullaniciya gostermeden Windows'ta calistirilabilir dosya vermek icin `.exe` uretebilirsin.
+
+Gelistirici bilgisayarinda:
+
+```bat
+build_exe.bat
+```
+
+Build bittikten sonra exe burada olusur:
+
+```text
+dist\fis-ocr-api.exe
+```
+
+Karsi tarafa normalde sadece bu exe verilir. Karsi tarafin Python, Tesseract, Windows OCR veya Python paketi kurmasi gerekmez.
+
+Detayli aciklama icin:
+
+```text
+EXE_KULLANIM.md
+```
+
+Not: `.exe` normal kullanicidan kodu gizler, fakat yuzde yuz kaynak kod korumasi degildir. Repo public kalirsa GitHub'daki `.py` dosyalari herkes tarafindan gorulebilir. Kodun GitHub'da gorunmemesi icin repo private yapilmali veya sadece exe bir Release olarak paylasilmalidir.
