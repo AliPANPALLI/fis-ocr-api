@@ -20,10 +20,43 @@ API'ye gorsel gonderirsin, servis su alanlari JSON olarak dondurur:
 
 OCR motoru olarak `rapidocr-onnxruntime` kullanilir. Windows OCR'a bagli degildir.
 
+## Neden `receipt_api.py` GitHub'a Yuklendi?
+
+`receipt_api.py` bu projenin ana uygulama dosyasidir.
+
+Bu dosyanin icinde sunlar bulunur:
+
+- FastAPI endpointleri: `/`, `/health`, `/extract`, `/extract-sample/{dosya_adi}`
+- Gorseli alma ve OCR'a hazirlama islemleri
+- Fis alanlarini cikaran parser
+- Tarih, Z No, toplam, KDV, banka/kredi karti gibi alanlari duzeltme kurallari
+
+Yani `receipt_api.py` GitHub'a yuklenmezse proje calismaz. `requirements.txt` sadece hangi kutuphanelerin kurulacagini soyler; uygulamanin kendisi `receipt_api.py` dosyasidir.
+
+Kodun herkese acik gorunmesini istemiyorsan repo'yu GitHub'da private yapman gerekir. Alternatif olarak Docker image hazirlanip sadece image dagitilabilir, ama normal GitHub repo ile calistirmak icin Python kod dosyasi gerekir.
+
 ## Gereksinimler
 
 - Python 3.11 onerilir
 - Windows, Linux veya Docker
+
+## OCR Ayrica Kurulacak mi?
+
+Hayir, kullanicinin bilgisayarina ayrica Tesseract, Windows OCR veya baska bir OCR programi kurmasi gerekmez.
+
+OCR icin gereken Python paketi `requirements.txt` icindedir:
+
+```text
+rapidocr-onnxruntime
+```
+
+Kullanici su komutu calistirdiginda OCR kutuphanesi de otomatik kurulur:
+
+```bash
+pip install -r requirements.txt
+```
+
+Ilk calismada OCR modeli ve bagimli paketler yuklenebilir. Bu yuzden ilk kurulum internet ister. Kurulum bittikten sonra API lokal makinede calisir.
 
 ## Lokal Calistirma
 
@@ -41,9 +74,31 @@ pip install -r requirements.txt
 run_receipt_api.bat
 ```
 
+Windows'ta adim adim:
+
+1. Python 3.11 kur.
+2. GitHub reposunu indir veya clone et.
+3. Proje klasorunde terminal ac.
+4. `python -m venv .venv` komutunu calistir.
+5. `.venv\Scripts\activate` komutunu calistir.
+6. `pip install -r requirements.txt` komutunu calistir.
+7. `run_receipt_api.bat` dosyasini calistir.
+8. Tarayicidan `http://127.0.0.1:8000` adresine gir.
+
 Linux / macOS:
 
 ```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn receipt_api:app --host 0.0.0.0 --port 8000
+```
+
+Linux sunucuda calistirirken:
+
+```bash
+git clone https://github.com/AliPANPALLI/fis-ocr-api.git
+cd fis-ocr-api
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn receipt_api:app --host 0.0.0.0 --port 8000
@@ -58,6 +113,8 @@ http://127.0.0.1:8000
 Bu adreste basit bir resim yukleme ekrani da vardir.
 
 ## Docker ile Calistirma
+
+Docker kullanirsan kullanicinin Python paketleriyle tek tek ugrasmamasi daha kolay olur. Docker image icinde Python, API ve OCR kutuphaneleri kurulur.
 
 ```bash
 docker build -t fis-ocr-api .
@@ -150,6 +207,8 @@ Bu repo kod ve calisma dosyalarini icermelidir:
 - `run_receipt_api.bat`
 - `README.md`
 - `.gitignore`
+
+Bu dosyalar olmadan proje baska bilgisayarda kurulamaz. Ozellikle `receipt_api.py` zorunludur; API'nin kendisi odur.
 
 Su dosyalari GitHub'a koyma:
 
